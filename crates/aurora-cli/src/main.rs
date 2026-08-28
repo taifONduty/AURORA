@@ -1,4 +1,5 @@
 mod inspect;
+mod run;
 
 use std::{path::PathBuf, process::ExitCode};
 
@@ -7,6 +8,8 @@ use clap::{Parser, Subcommand};
 
 const EXIT_OK: u8 = 0;
 const EXIT_FAILURE: u8 = 1;
+const EXIT_CONFIGURATION: u8 = 2;
+const EXIT_CANCELLED: u8 = 130;
 
 #[derive(Debug, Parser)]
 #[command(name = "aurora", version)]
@@ -17,7 +20,15 @@ struct Arguments {
 
 #[derive(Debug, Subcommand)]
 enum Command {
-    Inspect { path: PathBuf },
+    Inspect {
+        path: PathBuf,
+    },
+    Run {
+        #[arg(long)]
+        prompt: String,
+        #[arg(long)]
+        output: PathBuf,
+    },
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -41,6 +52,26 @@ impl CommandReport {
             exit_code: EXIT_FAILURE,
             stdout,
             diagnostics: vec![diagnostic],
+        }
+    }
+
+    pub(crate) fn configuration(diagnostic: String) -> Self {
+        Self {
+            exit_code: EXIT_CONFIGURATION,
+            stdout: String::new(),
+            diagnostics: vec![diagnostic],
+        }
+    }
+
+    pub(crate) fn with_diagnostics(
+        exit_code: u8,
+        stdout: String,
+        diagnostics: Vec<String>,
+    ) -> Self {
+        Self {
+            exit_code,
+            stdout,
+            diagnostics,
         }
     }
 
@@ -88,10 +119,12 @@ pub(crate) fn finish_reason_label(reason: &FinishReason) -> String {
     }
 }
 
-fn main() -> ExitCode {
+#[tokio::main]
+async fn main() -> ExitCode {
     let arguments = Arguments::parse();
     match arguments.command {
         Command::Inspect { path } => inspect::execute(&path),
+        Command::Run { prompt, output } => run::execute(prompt, output).await,
     }
     .emit()
 }
@@ -117,5 +150,41 @@ mod tests {
         let error = Arguments::try_parse_from(["aurora", "inspect", "run.jsonl", "--json"])
             .expect_err("Phase 1E has no JSON output flag");
         assert_eq!(error.exit_code(), 2);
+    }
+
+    #[test]
+    fn run_accepts_only_prompt_and_output() {
+        let arguments = Arguments::try_parse_from([
+            "aurora",
+            "run",
+            "--prompt",
+            "Explain ownership",
+            "--output",
+            "run.jsonl",
+        ])
+        .expect("run command parses");
+        assert!(matches!(
+            arguments.command,
+            Command::Run { prompt, output }
+                if prompt == "Explain ownership"
+                    && output.as_path() == std::path::Path::new("run.jsonl")
+        ));
+    }
+
+    #[test]
+    fn run_rejects_unapproved_flags() {
+        for flag in ["--provider", "--model", "--max-steps", "--json"] {
+            let error = Arguments::try_parse_from([
+                "aurora",
+                "run",
+                "--prompt",
+                "Explain ownership",
+                "--output",
+                "run.jsonl",
+                flag,
+            ])
+            .expect_err("Phase 1E accepts no additional run flags");
+            assert_eq!(error.exit_code(), 2, "unexpected exit code for {flag}");
+        }
     }
 }
