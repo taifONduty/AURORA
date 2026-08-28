@@ -1,7 +1,6 @@
 /target/
 .DS_Store
 
-# Local documentation and agent records
 *.md
 !/README.md
 docs/
