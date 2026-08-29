@@ -3,6 +3,7 @@ members = [
     "crates/aurora-core",
     "crates/aurora-cli",
     "crates/aurora-openai",
+    "crates/aurora-research",
 ]
 resolver = "3"
 
