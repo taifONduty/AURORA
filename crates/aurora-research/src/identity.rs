@@ -53,3 +53,4 @@ macro_rules! define_id {
 define_id!(SourceId);
 define_id!(EvidenceId);
 define_id!(ClaimId);
+define_id!(InvestigationTaskId);
