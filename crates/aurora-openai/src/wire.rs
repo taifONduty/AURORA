@@ -13,6 +13,36 @@ pub(crate) struct ResponsesRequest {
 }
 
 #[derive(Serialize)]
+pub(crate) struct StructuredResponsesRequest {
+    pub(crate) model: String,
+    pub(crate) store: bool,
+    pub(crate) stream: bool,
+    pub(crate) instructions: String,
+    pub(crate) input: String,
+    pub(crate) text: StructuredText,
+}
+
+#[derive(Serialize)]
+pub(crate) struct StructuredText {
+    pub(crate) format: StructuredTextFormat,
+}
+
+#[derive(Serialize)]
+pub(crate) struct StructuredTextFormat {
+    #[serde(rename = "type")]
+    pub(crate) kind: StructuredTextFormatKind,
+    pub(crate) name: String,
+    pub(crate) strict: bool,
+    pub(crate) schema: serde_json::Value,
+}
+
+#[derive(Clone, Copy, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub(crate) enum StructuredTextFormatKind {
+    JsonSchema,
+}
+
+#[derive(Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub(crate) enum InputItem {
     Message {

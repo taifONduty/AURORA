@@ -1,3 +1,4 @@
+mod structured;
 mod translate;
 mod wire;
 
@@ -9,6 +10,10 @@ use reqwest::{
 };
 use tokio_util::sync::CancellationToken;
 
+pub use crate::structured::{
+    StructuredOutputFuture, StructuredOutputInvocation, StructuredOutputRequest,
+    StructuredOutputValidationError,
+};
 use crate::translate::{
     body_independent_failure, classify_http_response, request_from_model_input,
 };
@@ -133,9 +138,23 @@ impl OpenAiBackend {
         let client = reqwest::Client::builder()
             .redirect(Policy::none())
             .no_proxy()
+            .retry(reqwest::retry::never())
             .build()
             .map_err(|_| BackendBuildError)?;
         Ok(Self { config, client })
+    }
+
+    pub fn invoke_structured(
+        &mut self,
+        request: StructuredOutputRequest,
+        cancellation: CancellationToken,
+    ) -> StructuredOutputFuture {
+        structured::invoke_structured_owned(
+            self.client.clone(),
+            self.config.clone(),
+            request,
+            cancellation,
+        )
     }
 }
 
