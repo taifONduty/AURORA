@@ -114,6 +114,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "aurora-tavily"
+version = "0.0.0"
+dependencies = [
+ "aurora-research",
+ "reqwest",
+ "ring",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
