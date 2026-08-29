@@ -55,3 +55,4 @@ define_id!(EvidenceId);
 define_id!(ClaimId);
 define_id!(InvestigationTaskId);
 define_id!(VerificationId);
+define_id!(ResearchGapId);

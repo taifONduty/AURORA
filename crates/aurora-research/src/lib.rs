@@ -6,6 +6,10 @@ mod investigation_record;
 mod investigation_state;
 mod planning;
 mod record;
+mod research_control;
+mod research_control_codec;
+mod research_control_record;
+mod research_control_state;
 mod state;
 mod verification;
 mod verification_codec;
@@ -15,7 +19,8 @@ mod verification_state;
 pub use codec::{CodecError, decode_record, encode_record};
 pub use entity::{Claim, ContentDigest, Evidence, MediaType, RetrievedAt, Source, ValidationError};
 pub use identity::{
-    ClaimId, EvidenceId, IdentityError, InvestigationTaskId, SourceId, VerificationId,
+    ClaimId, EvidenceId, IdentityError, InvestigationTaskId, ResearchGapId, SourceId,
+    VerificationId,
 };
 pub use investigation_codec::{
     InvestigationCodecError, decode_investigation_record, encode_investigation_record,
@@ -33,6 +38,20 @@ pub use planning::{
     TaskOrigin,
 };
 pub use record::{RESEARCH_SCHEMA_VERSION, ResearchEvent, ResearchRecord};
+pub use research_control::{
+    IdentifiedResearchGap, ResearchControlLimits, ResearchControlValidationError, ResearchFailure,
+    ResearchGapCause,
+};
+pub use research_control_codec::{
+    ResearchControlCodecError, decode_research_control_record, encode_research_control_record,
+};
+pub use research_control_record::{
+    RESEARCH_CONTROL_SCHEMA_VERSION, ResearchControlEvent, ResearchControlRecord,
+};
+pub use research_control_state::{
+    ResearchControlState, ResearchControlStatus, ResearchControlTransitionError, ResearchGapState,
+    ResearchGapStatus,
+};
 pub use state::{ResearchState, TransitionError};
 pub use verification::{
     EvidenceAssessment, EvidenceRelation, EvidenceSufficiency, VerificationAssessment,
