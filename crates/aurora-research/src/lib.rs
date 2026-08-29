@@ -11,6 +11,7 @@ mod research_control_codec;
 mod research_control_record;
 mod research_control_state;
 mod state;
+mod synthesis;
 mod verification;
 mod verification_codec;
 mod verification_record;
@@ -53,6 +54,11 @@ pub use research_control_state::{
     ResearchGapStatus,
 };
 pub use state::{ResearchState, TransitionError};
+pub use synthesis::{
+    ClaimPresentation, GroundedAssertion, GroundedReport, GroundedReportSection, GroundingCitation,
+    SynthesisAssertionDraft, SynthesisBasis, SynthesisClaimBasis, SynthesisDraft,
+    SynthesisReportScope, SynthesisSectionDraft, SynthesisValidationError,
+};
 pub use verification::{
     EvidenceAssessment, EvidenceRelation, EvidenceSufficiency, VerificationAssessment,
     VerificationValidationError,
