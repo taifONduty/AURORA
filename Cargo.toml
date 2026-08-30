@@ -2,6 +2,7 @@
 members = [
     "crates/aurora-core",
     "crates/aurora-cli",
+    "crates/aurora-eval",
     "crates/aurora-openai",
     "crates/aurora-research",
     "crates/aurora-research-openai",

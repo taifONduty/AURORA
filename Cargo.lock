@@ -87,6 +87,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "aurora-eval"
+version = "0.0.0"
+dependencies = [
+ "aurora-research",
+ "proptest",
+ "ring",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "time",
+]
+
+[[package]]
 name = "aurora-openai"
 version = "0.0.0"
 dependencies = [
