@@ -156,6 +156,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "aurora-zai"
+version = "0.0.0"
+dependencies = [
+ "aurora-core",
+ "proptest",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tokio-util",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
